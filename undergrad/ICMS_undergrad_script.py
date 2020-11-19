@@ -105,3 +105,28 @@ for each_url in course_links_file:
             desc_list = ' '.join(desc_list)
             course_data['Description'] = desc_list
             print('DESCRIPTION: ', desc_list)
+
+    # DURATION
+    duration_title = soup.find('span', text=re.compile('Duration:', re.IGNORECASE))
+    if duration_title:
+        duration = duration_title.find_next_sibling('span')
+        if duration:
+            duration_text = duration.get_text().lower()
+            if 'part-time' in duration_text:
+                course_data['Part_Time'] = 'yes'
+                course_data['Full_Time'] = 'yes'
+            else:
+                course_data['Part_Time'] = 'no'
+                course_data['Full_Time'] = 'yes'
+            converted_duration = dura.convert_duration(duration_text)
+            if converted_duration is not None:
+                duration_l = list(converted_duration)
+                if duration_l[0] == 1 and 'Years' in duration_l[1]:
+                    duration_l[1] = 'Year'
+                if duration_l[0] == 1 and 'Months' in duration_l[1]:
+                    duration_l[1] = 'Month'
+                course_data['Duration'] = duration_l[0]
+                course_data['Duration_Time'] = duration_l[1]
+                print('COURSE DURATION: ', str(duration_l[0]) + ' / ' + duration_l[1])
+            print('FULL-TIME/PART-TIME: ', course_data['Full_Time'] + ' / ' + course_data['Part_Time'])
+
