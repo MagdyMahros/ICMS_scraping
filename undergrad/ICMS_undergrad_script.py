@@ -39,7 +39,7 @@ course_data = {'Level_Code': '', 'University': 'International College of Managem
                'Prerequisite_1': '', 'Prerequisite_2': 'IELTS', 'Prerequisite_3': '', 'Prerequisite_1_grade': '',
                'Prerequisite_2_grade': '6.5', 'Prerequisite_3_grade': '', 'Website': '', 'Course_Lang': '',
                'Availability': 'A', 'Description': '', 'Career_Outcomes': '', 'Online': '', 'Offline': '',
-               'Distance': '', 'Face_to_Face': '', 'Blended': '', 'Remarks': ''}
+               'Distance': 'no', 'Face_to_Face': '', 'Blended': 'no', 'Remarks': ''}
 
 possible_cities = {
                    'online': 'Online', 'mixed': 'Online', 'brisbane': 'Brisbane', 'sydney': 'Sydney',
@@ -129,4 +129,23 @@ for each_url in course_links_file:
                 course_data['Duration_Time'] = duration_l[1]
                 print('COURSE DURATION: ', str(duration_l[0]) + ' / ' + duration_l[1])
             print('FULL-TIME/PART-TIME: ', course_data['Full_Time'] + ' / ' + course_data['Part_Time'])
+
+    # STUDY MODE
+    studyMode_title = soup.find('span', text=re.compile('Study Mode:', re.IGNORECASE))
+    if studyMode_title:
+        studyMode_p = studyMode_title.find_next_sibling('span')
+        if studyMode_p:
+            mode_text = studyMode_p.get_text().lower()
+            print(mode_text)
+            if 'on-campus' in mode_text:
+                course_data['Face_to_Face'] = 'yes'
+                course_data['Offline'] = 'yes'
+            else:
+                course_data['Face_to_Face'] = 'no'
+                course_data['Offline'] = 'no'
+            if 'online' in mode_text:
+                course_data['Online'] = 'yes'
+                actual_cities.append('online')
+            else:
+                course_data['Online'] = 'no'
 
