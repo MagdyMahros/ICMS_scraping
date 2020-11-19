@@ -20,8 +20,7 @@ exec_path = exec_path.parent.__str__() + '/Libraries/Google/v86/chromedriver.exe
 browser = webdriver.Chrome(executable_path=exec_path, options=option)
 
 # MAIN ROUTINE
-courses_page_url = 'https://www.icms.edu.au/courses/undergraduate/'
-site_url = 'https://www.icms.edu.au'
+courses_page_url = 'https://www.icms.edu.au/courses/post-graduate/'
 list_of_links = []
 browser.get(courses_page_url)
 page_url = browser.page_source
@@ -40,7 +39,7 @@ if result_element:
                 list_of_links.append(link_href)
 
 # SAVE TO FILE
-course_links_file_path = os.getcwd().replace('\\', '/') + '/ICMS_courses_links.txt'
+course_links_file_path = os.getcwd().replace('\\', '/') + '/ICMS_postgrad_links.txt'
 course_links_file = open(course_links_file_path, 'w')
 for link in list_of_links:
     if link is not None and link != "" and link != "\n":
