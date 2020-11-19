@@ -136,7 +136,6 @@ for each_url in course_links_file:
         studyMode_p = studyMode_title.find_next_sibling('span')
         if studyMode_p:
             mode_text = studyMode_p.get_text().lower()
-            print(mode_text)
             if 'on-campus' in mode_text:
                 course_data['Face_to_Face'] = 'yes'
                 course_data['Offline'] = 'yes'
@@ -145,7 +144,34 @@ for each_url in course_links_file:
                 course_data['Offline'] = 'no'
             if 'online' in mode_text:
                 course_data['Online'] = 'yes'
-                actual_cities.append('online')
             else:
                 course_data['Online'] = 'no'
+    print('DELIVERY: online: ' + course_data['Online'] + ' offline: ' + course_data['Offline'] +
+          ' face to face: ' + course_data['Face_to_Face'] + ' blended: ' + course_data['Blended'] +
+          ' distance: ' + course_data['Distance'])
 
+    # CITY
+    campus_title = soup.find('span', text=re.compile('Campus:', re.IGNORECASE))
+    if campus_title:
+        location = campus_title.find_next_sibling('span')
+        if location:
+            location_text = location.get_text().lower().strip()
+            if 'northern beaches campus' in location_text:
+                actual_cities.append('sydney')
+            if 'online' in location_text:
+                actual_cities.append('online')
+        print('LOCATION: ', actual_cities)
+
+    # CAREER OUTCOMES
+    career_container = soup.find('ul', class_='table-data')
+    if career_container:
+        career_list = []
+        career_li = career_container.find_all('li')
+        if career_li:
+            for li in career_li:
+                career_list.append(li.get_text().strip())
+            career_list = ' / '.join(career_list)
+            course_data['Career_Outcomes'] = career_list
+            print('CAREER OUTCOMES: ', career_list)
+
+    # AQF LEVEL (Australian Qualification Framework)
