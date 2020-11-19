@@ -2,7 +2,7 @@
     * author: Magdy Abdelkader
     * company: Fresh Futures/Seeka Technology
     * position: IT Intern
-    * date: 03-11-20
+    * date: 19-11-20
     * description:This script extracts the corresponding undergraduate courses details and tabulate it.
 """
 
@@ -175,3 +175,11 @@ for each_url in course_links_file:
             print('CAREER OUTCOMES: ', career_list)
 
     # AQF LEVEL (Australian Qualification Framework)
+    aqf_level_title = soup.find('span', text=re.compile('AQF Level:', re.IGNORECASE))
+    if aqf_level_title:
+        aqf = aqf_level_title.find_next_sibling('span')
+        if aqf:
+            aqf_text = aqf.get_text().strip()
+            course_data['Prerequisite_1'] = 'AQF Level'
+            course_data['Prerequisite_1_grade'] = aqf_text
+            print('AQF LEVEL: ', aqf_text)
